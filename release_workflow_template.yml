@@ -1,0 +1,65 @@
+name: ShortCompass release
+on:
+  push:
+    tags:
+      - 'v*'
+permissions:
+  contents: write
+concurrency:
+  group: shortcompass-release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.11'
+      - name: Set up Node.js for browser-side tests
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+      - name: Check tag matches source version
+        shell: bash
+        env:
+          TAG_VERSION: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os, re, sys
+          from pathlib import Path
+          tag = os.environ.get('TAG_VERSION', '').strip()
+          expected = tag[1:] if tag.lower().startswith('v') else tag
+          server = Path('ShortCompassServer.py').read_text(encoding='utf-8')
+          match = re.search(r"^APP_VERSION\s*=\s*['\"]([^'\"]+)['\"]", server, re.M)
+          if not match or match.group(1) != expected:
+              print('Tag version and APP_VERSION do not match; update source version first.', file=sys.stderr)
+              sys.exit(1)
+          PY
+      - name: Run Python regression tests
+        run: python -m unittest Test_ShortCompass.py Test_UpdateAndAI.py Test_ReleaseTools.py Test_GitHubBootstrap.py -v
+      - name: Run JavaScript regression tests
+        shell: bash
+        run: |
+          node Test_ABReliability.js
+          node Test_OpportunityLearning.js
+          node Test_YouTubeRanking.js
+          node Test_UpdateUI.js
+          node Test_FullDiagnosticsUI.js
+      - name: Build release package and manifest
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          python Prepare_Release.py --version "$VERSION" --repository "$GITHUB_REPOSITORY" --minimum-version 2.38 --output dist --notes-file RELEASE_NOTES_CURRENT_KO.txt
+      - name: Publish ZIP, manifest, and checksums
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
+        with:
+          files: |
+            dist/ShortCompass-v*.zip
+            dist/update_manifest.json
+            dist/SHA256SUMS.txt
+          generate_release_notes: true

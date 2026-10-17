@@ -1,0 +1,10 @@
+{
+  "repository": "OWNER/REPOSITORY",
+  "tagPrefix": "v",
+  "minimumSupportedVersion": "2.38",
+  "manifestUrl": "https://github.com/OWNER/REPOSITORY/releases/latest/download/update_manifest.json",
+  "workflowTemplate": "release_workflow_template.yml",
+  "secretPolicy": "Never store API keys, tokens, or private keys in source control or release files.",
+  "bootstrapScript": "Setup_GitHub_AutoRelease.ps1",
+  "setupGuide": "GITHUB_AUTORELEASE_SETUP_KO.md"
+}

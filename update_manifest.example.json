@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "version": "2.41",
+  "minimumVersion": "2.38",
+  "downloadUrl": "https://github.com/OWNER/REPOSITORY/releases/download/v2.41/ShortCompass-v2.41.zip",
+  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "releaseNotes": "예시 전용 — 이 파일을 직접 배포하지 마세요. Prepare_Release.py가 실제 ZIP의 SHA-256과 다운로드 URL로 manifest를 생성합니다.",
+  "builtAt": "2026-10-17T00:00:00Z"
+}

@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+dist/
+.env
+.env.*
+*.log
+shortcompass_data.json
+shortcompass_state.json
+release_config.json
+*_backup_*.json
+ShortsCompass-backup-*.json
