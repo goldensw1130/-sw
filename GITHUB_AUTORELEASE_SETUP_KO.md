@@ -91,3 +91,8 @@ v2.45는 Git, GitHub CLI, Python, Node.js 설치 동의를 먼저 요청합니�
 v2.45의 `Setup_GitHub_AutoRelease.bat`은 동일 콘솔을 `cmd /k`로 유지합니다. PowerShell이 구문 오류나 실행 오류로 즉시 종료되어도 창과 로그 출력이 남습니다. 설치가 이미 완료됐다면 `INSTALL`을 다시 입력하지 마세요. 화면에 표시된 오류를 먼저 읽거나 다음 로그를 확인하세요.
 
 `%LOCALAPPDATA%\ShortCompass\logs\github-autorelease-setup.log`
+
+
+## v2.46 Windows 앱 실행 안정화
+
+`Start_ShortCompass.bat`은 별도 `Start_ShortCompass_Server.bat` 서버 콘솔을 열고 `/health`가 v2.46 정상 응답을 반환한 다음 브라우저를 엽니다. 시작이 실패하면 창을 닫지 않고 로그 경로와 마지막 오류를 표시합니다. 실행 로그는 `%LOCALAPPDATA%\ShortCompass\logs\start-shortcompass.log`에 기록됩니다. 이미 이전 버전 서버가 8765 포트에서 실행 중이면 이전 서버 창에서 `Ctrl+C`로 종료하고 새 실행 파일을 다시 여세요.

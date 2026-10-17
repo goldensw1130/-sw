@@ -5,10 +5,10 @@ Setup_GitHub_AutoRelease.bat 실행 시 저장소 입력은 Enter로 기본값�
 v2.42: 기존에 GitHub에서 만든 빈 저장소/기본 README 저장소도 안전하게 연결하고, 설정 실패 원인을 로그로 남깁니다. Setup_GitHub_AutoRelease.bat을 더블클릭한 뒤 저장소 이름, owner/repo, 저장소 URL 또는 GitHub Projects 보드 URL을 입력하세요(모르면 기본값으로 Enter). 기존 저장소면 USE-EXISTING, 새 저장소면 CREATE를 입력해야 진행합니다. 오류 로그는 %LOCALAPPDATA%\ShortCompass\logs\github-autorelease-setup.log에 남습니다. 자세한 내용은 GITHUB_AUTORELEASE_SETUP_KO.md를 확인하세요.
 v2.39 새 기능: GitHub 릴리스 준비 자동화 도구, CI 릴리스 템플릿, 전체 진단 보고서 생성/내보내기. 자세한 설정은 RELEASE_PUBLISHING_GUIDE_KO.md를 참고하세요.
 
-숏폼 나침반 v2.42 시작하기
+숏폼 나침반 v2.46 시작하기
 
 1. ZIP 파일을 원하는 폴더에 압축 해제합니다.
-2. 전체 기능을 사용하려면 Start_ShortCompass.bat을 실행합니다. 이 파일이 로컬 서버를 켜고 브라우저를 엽니다. ShortsCompass.html을 직접 열면 서버 연결이 필요한 AI 작업실·자동 업데이트·로컬 검색은 작동하지 않습니다.
+2. 전체 기능을 사용하려면 Start_ShortCompass.bat을 실행합니다. 서버가 /health 응답을 확인한 다음 브라우저를 엽니다. 시작 실패 시 창을 유지하고 로그를 표시합니다. ShortsCompass.html을 직접 열면 서버 연결이 필요한 AI 작업실·자동 업데이트·로컬 검색은 작동하지 않습니다.
 3. YouTube 분석 기능은 본인의 YouTube Data API v3 키가 필요한 경우 앱 설정에 입력해 사용합니다. API 키와 할당량은 Google Cloud에서 관리합니다.
 4. TikTok 조사에는 'TikTok 데이터 분석'을 누르거나 검색어를 입력하고 '앱 안에서 검색'을 누릅니다.
 5. TikTok 공식 검색 페이지는 새 탭으로 열립니다. 확인한 영상의 제목과 주소를 앱에 직접 추가한 뒤, 표본 입력 화면에서 실제로 확인한 지표를 입력하세요.
@@ -219,3 +219,9 @@ TikTok 표본 입력에서 '채널 평소 조회수 중앙값'을 선택 입력�
 3. ‘게시 후 추정 조회수/일’은 최신 게시 순으로 가져온 요청 표본 안에서 누적 조회수를 게시 후 경과일로 나누어 재정렬합니다. 최근 24시간의 실제 증가량은 아닙니다.
 4. ‘검색 결과 CSV 내보내기’로 순위·제목·채널·URL·조회수·게시일·추정 조회수/일·검색 조건·수집 시각을 저장할 수 있습니다.
 5. 정렬은 요청한 최대 50개 표본 내에서만 적용됩니다. YouTube 전체 영상의 절대 순위나 Shorts 전체 피드의 대표 순위가 아닙니다. API 키, API 활성화, 할당량 및 인터넷 연결이 필요합니다.
+
+
+[v2.46 Windows 실행 진단]
+- 실행 파일: Start_ShortCompass.bat. 별도 서버 콘솔: Start_ShortCompass_Server.bat. 서버 창은 앱의 로컬 검색·AI·업데이트 기능을 사용하는 동안 열어 둡니다.
+- 서버 로그: %LOCALAPPDATA%\ShortCompass\logs\start-shortcompass.log
+- 앱 창은 http://127.0.0.1:8765/health 의 정상 응답을 확인한 후에만 브라우저를 엽니다. 시작을 확인하지 못하면 로그와 오류를 표시하고 창을 유지합니다.

@@ -183,7 +183,7 @@ class BackupReliabilityTests(unittest.TestCase):
     def test_backup_export_includes_version_and_timestamp_metadata(self):
         from pathlib import Path
         source=(Path(__file__).resolve().parent/'ShortsCompass.html').read_text(encoding='utf-8')
-        self.assertIn("backupMeta:{app:'ShortCompass',version:'2.45',exportedAt:new Date().toISOString()}", source)
+        self.assertIn("backupMeta:{app:'ShortCompass',version:'2.46',exportedAt:new Date().toISOString()}", source)
         self.assertIn("'version':APP_VERSION", (Path(__file__).resolve().parent/'ShortCompassServer.py').read_text(encoding='utf-8'))
 
 
@@ -294,7 +294,7 @@ class ProvenanceAndLearningRegressionTests(unittest.TestCase):
     def test_client_source_provenance_and_adaptive_rank_gates_exist(self):
         from pathlib import Path
         source=(Path(__file__).resolve().parent/'ShortsCompass.html').read_text(encoding='utf-8')
-        for marker in ['function opportunityComparableStats(o)', 'function opportunityEmpiricalRanking()', '같은 플랫폼·수익 경로', '실증 반영 점수', 'sourceMeta:x.provenance', 'data.collectedAt', 'sourceMeta:v.sourceMeta', '출처 제공자','backupMeta:{app:\'ShortCompass\',version:\'2.45\'']:
+        for marker in ['function opportunityComparableStats(o)', 'function opportunityEmpiricalRanking()', '같은 플랫폼·수익 경로', '실증 반영 점수', 'sourceMeta:x.provenance', 'data.collectedAt', 'sourceMeta:v.sourceMeta', '출처 제공자','backupMeta:{app:\'ShortCompass\',version:\'2.46\'']:
             self.assertIn(marker,source)
 
     def test_research_api_and_health_version_in_server(self):
@@ -349,7 +349,7 @@ class SearchRecoveryV235Tests(unittest.TestCase):
             self.assertIn(marker,source)
         server=(Path(__file__).resolve().parent/'ShortCompassServer.py').read_text(encoding='utf-8')
         self.assertIn("'version':APP_VERSION",server)
-        self.assertIn("APP_VERSION = '2.45'",server)
+        self.assertIn("APP_VERSION = '2.46'",server)
 
 
 
@@ -476,7 +476,7 @@ class YouTubeRankingCarryForwardTests(unittest.TestCase):
     def test_server_version_is_v245(self):
         from pathlib import Path
         source=(Path(__file__).resolve().parent/'ShortCompassServer.py').read_text(encoding='utf-8')
-        self.assertIn("APP_VERSION = '2.45'",source)
+        self.assertIn("APP_VERSION = '2.46'",source)
 
 
 

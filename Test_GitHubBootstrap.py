@@ -43,11 +43,24 @@ class GitHubBootstrapSafetyTests(unittest.TestCase):
         raw = launcher_path.read_bytes()
         self.assertFalse(raw.startswith(b'\xef\xbb\xbf'), 'cmd.exe launcher must be BOM-free')
         self.assertIn('cmd.exe /k ""%~f0" %*"', self.launcher)
-        self.assertIn('SHORTCOMPASS_KEEP_OPEN_245', self.launcher)
+        self.assertIn('SHORTCOMPASS_KEEP_OPEN_246', self.launcher)
         self.assertIn('PowerShell exit code', self.launcher)
         self.assertIn('SETUP STOPPED. Exit code:', self.launcher)
         self.assertIn('type "%LOGFILE%"', self.launcher)
         self.assertIn('The console will remain open', self.launcher)
+
+    def test_app_launcher_checks_health_keeps_diagnostics_and_preserves_server_console(self):
+        app_launcher = (ROOT / 'Start_ShortCompass.bat').read_text(encoding='utf-8-sig')
+        server_launcher = (ROOT / 'Start_ShortCompass_Server.bat').read_text(encoding='utf-8-sig')
+        self.assertIn('Start_ShortCompass_Server.bat', app_launcher)
+        self.assertIn('http://127.0.0.1:8765/health', app_launcher)
+        self.assertIn("'2.46'", app_launcher)
+        self.assertIn('start-shortcompass.log', app_launcher)
+        self.assertIn('pause', app_launcher.lower())
+        self.assertIn('py -3 -u', server_launcher)
+        self.assertIn('python -u', server_launcher)
+        self.assertIn('start-shortcompass.log', server_launcher)
+        self.assertIn('pause', server_launcher.lower())
 
     def test_installer_offers_consented_winget_install_and_browser_login(self):
         self.assertIn('Windows 패키지 관리자 winget으로 위 도구를 설치할 수 있습니다', self.script)
@@ -137,7 +150,10 @@ class GitHubBootstrapSafetyTests(unittest.TestCase):
         self.assertIn("'diff', '--cached', '--check'", self.script)
 
     def test_workflow_is_tag_triggered_and_uses_minimum_write_scope(self):
+        self.assertIn("branches:\n      - main", self.workflow)
         self.assertIn("tags:\n      - 'v*'", self.workflow)
+        self.assertIn("startsWith(github.event.head_commit.message, 'release: publish ShortCompass v')", self.workflow)
+        self.assertIn('tag_name: v${{ steps.release-version.outputs.version }}', self.workflow)
         self.assertIn('permissions:\n  contents: write', self.workflow)
         self.assertNotIn('permissions: write-all', self.workflow)
         self.assertIn('persist-credentials: false', self.workflow)

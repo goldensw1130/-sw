@@ -19,7 +19,7 @@ SEARCH_CACHE_TTL = 180
 SEARCH_CACHE_MAX = 100
 MIN_INTERVAL = 2.5
 MAX_QUERY = 180
-APP_VERSION = '2.45'
+APP_VERSION = '2.46'
 # Replaced inside release ZIPs by Prepare_Release.py with the real public feed URL.
 DEFAULT_UPDATE_MANIFEST_URL = "https://github.com/goldensw1130/-sw/releases/latest/download/update_manifest.json"
 MAX_UPDATE_MANIFEST_BYTES = 262144
@@ -78,7 +78,7 @@ def _open_provider_url(req, timeout, provider):
     if parsed.scheme!='https' or (parsed.hostname or '').lower()!=expected:
         raise ValueError('AI 요청 주소가 해당 제공자의 공식 HTTPS 호스트와 일치하지 않습니다.')
     return build_opener(_NoRedirectForSecretAPI()).open(req,timeout=timeout)
-UPDATE_ALLOWED_FILES = {'ShortsCompass.html','ShortCompassServer.py','Start_ShortCompass.bat','Start_Here_KO.txt','Changes_KO.txt','Test_KO.txt','Test_ShortCompass.py','Test_ABReliability.js','Test_OpportunityLearning.js','Test_YouTubeRanking.js','Test_UpdateAndAI.py','Test_UpdateUI.js','Test_FullDiagnosticsUI.js','Test_ReleaseTools.py','Test_GitHubBootstrap.py','Prepare_Release.py','RELEASE_PUBLISHING_GUIDE_KO.md','RELEASE_NOTES_CURRENT_KO.txt','release_workflow_template.yml','release_config.example.json','DEVELOPMENT_STANDARD_KO.md','ROADMAP_KO.md','AI_SETUP_KO.txt','update_manifest.example.json','Setup_GitHub_AutoRelease.ps1','Setup_GitHub_AutoRelease.bat','GITHUB_AUTORELEASE_SETUP_KO.md'}
+UPDATE_ALLOWED_FILES = {'ShortsCompass.html','ShortCompassServer.py','Start_ShortCompass.bat','Start_ShortCompass_Server.bat','Start_Here_KO.txt','Changes_KO.txt','Test_KO.txt','Test_ShortCompass.py','Test_ABReliability.js','Test_OpportunityLearning.js','Test_YouTubeRanking.js','Test_UpdateAndAI.py','Test_UpdateUI.js','Test_FullDiagnosticsUI.js','Test_ReleaseTools.py','Test_GitHubBootstrap.py','Prepare_Release.py','RELEASE_PUBLISHING_GUIDE_KO.md','RELEASE_NOTES_CURRENT_KO.txt','release_workflow_template.yml','release_config.example.json','DEVELOPMENT_STANDARD_KO.md','ROADMAP_KO.md','AI_SETUP_KO.txt','update_manifest.example.json','Setup_GitHub_AutoRelease.ps1','Setup_GitHub_AutoRelease.bat','GITHUB_AUTORELEASE_SETUP_KO.md'}
 MAX_POST_BYTES = 65536
 DIAGNOSTIC_HOSTS = {
     'TikTok': 'www.tiktok.com',

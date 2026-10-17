@@ -1,6 +1,6 @@
-숏폼 나침반 v2.45 GitHub 자동 릴리스 설정 진단 핫픽스
+숏폼 나침반 v2.46 Windows 시작 안정화 및 진단
 
-- Windows PowerShell 5.1에서 GitHub 저장소 파일 목록을 확인할 때 발생할 수 있는 `function not defined: blob/0` 오류를 수정했습니다.
-- `gh api --jq`의 문자열 필터 대신 원본 JSON 응답을 PowerShell에서 해석해 저장소 파일 목록을 검사합니다.
-- 기존 저장소의 예상치 못한 파일이나 숏폼 나침반 코드 덮어쓰기 방지 검사는 유지합니다.
-- 앱 기능과 앱 버전 v2.45는 변경하지 않았습니다. 이 패키지는 자동 릴리스 설정 스크립트 수정본입니다.
+- 실행 배치 파일의 중첩 cmd 인용 문제를 피하도록 로컬 서버 실행을 별도 Start_ShortCompass_Server.bat으로 분리했습니다.
+- 브라우저를 열기 전에 /health 상태를 확인하며, 시작 실패 시 진단 로그와 오류를 표시하고 콘솔을 유지합니다.
+- 로컬 서버 시작 로그는 %LOCALAPPDATA%\ShortCompass\logs\start-shortcompass.log에 기록합니다.
+- 핵심 앱 기능, API 키 비노출, 업데이트 허용 파일 검사, 승인형 업데이트 동작은 유지했습니다.

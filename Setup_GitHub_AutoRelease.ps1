@@ -172,6 +172,7 @@ $SourceFiles = @(
     'ShortsCompass.html',
     'ShortCompassServer.py',
     'Start_ShortCompass.bat',
+    'Start_ShortCompass_Server.bat',
     'Start_Here_KO.txt',
     'Changes_KO.txt',
     'Test_KO.txt',
