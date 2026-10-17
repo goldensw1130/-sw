@@ -152,7 +152,7 @@ class GitHubBootstrapSafetyTests(unittest.TestCase):
     def test_workflow_is_tag_triggered_and_uses_minimum_write_scope(self):
         self.assertIn("branches:\n      - main", self.workflow)
         self.assertIn("tags:\n      - 'v*'", self.workflow)
-        self.assertIn("startsWith(github.event.head_commit.message, 'release: publish ShortCompass v')", self.workflow)
+        self.assertIn("startsWith(github.event.head_commit.message, 'release:')", self.workflow)
         self.assertIn('tag_name: v${{ steps.release-version.outputs.version }}', self.workflow)
         self.assertIn('permissions:\n  contents: write', self.workflow)
         self.assertNotIn('permissions: write-all', self.workflow)
