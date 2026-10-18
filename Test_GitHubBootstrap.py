@@ -66,9 +66,11 @@ class GitHubBootstrapSafetyTests(unittest.TestCase):
         self.assertIn('HEALTH_CODE', app_launcher)
         for name in ['Start_ShortCompass.bat', 'Start_ShortCompass_Server.bat', 'Setup_GitHub_AutoRelease.bat']:
             raw=(ROOT / name).read_bytes()
-            self.assertFalse(raw.startswith(b'\\xef\\xbb\\xbf'), name + ' must not have UTF-8 BOM')
-            self.assertIn(b'\\r\\n', raw, name + ' must use CRLF')
-            self.assertNotIn(b'\\n', raw.replace(b'\\r\\n', b''), name + ' must not mix bare LF')
+            self.assertFalse(raw.startswith(bytes([239, 187, 191])), name + ' must not have UTF-8 BOM')
+            crlf=bytes([13, 10])
+            lf=bytes([10])
+            self.assertIn(crlf, raw, name + ' must use CRLF')
+            self.assertNotIn(lf, raw.replace(crlf, b''), name + ' must not mix bare LF')
 
 
     def test_installer_offers_consented_winget_install_and_browser_login(self):
