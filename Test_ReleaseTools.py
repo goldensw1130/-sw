@@ -57,6 +57,12 @@ class ReleaseToolValidationTests(unittest.TestCase):
             with zipfile.ZipFile(str(package)) as archive:
                 self.assertEqual(archive.namelist(), release.allowed_package_files(ROOT / 'ShortCompassServer.py'))
                 self.assertIsNone(archive.testzip())
+                # Windows batch launchers must ship with CRLF even when built on Linux.
+                for batch_name in [name for name in archive.namelist() if name.lower().endswith('.bat')]:
+                    batch_bytes = archive.read(batch_name)
+                    self.assertIn(b'\r\n', batch_bytes, batch_name)
+                    self.assertNotIn(b'\n', batch_bytes.replace(b'\r\n', b''), batch_name)
+                    self.assertFalse(batch_bytes.startswith(b'\xef\xbb\xbf'), batch_name)
                 packaged_server = archive.read('ShortCompassServer.py').decode('utf-8')
                 self.assertIn("DEFAULT_UPDATE_MANIFEST_URL = \"https://github.com/example/short-compass/releases/latest/download/update_manifest.json\"", packaged_server)
             digest, names = app._validate_update_zip_bytes(package.read_bytes(), manifest['sha256'], CURRENT_VERSION)
@@ -86,7 +92,7 @@ class ReleaseToolValidationTests(unittest.TestCase):
     def test_manifest_minimum_version_cannot_exceed_release(self):
         with tempfile.TemporaryDirectory() as td:
             with self.assertRaisesRegex(ValueError, 'minimumVersion'):
-                release.build_release(ROOT, CURRENT_VERSION, 'example/short-compass', Path(td), minimum_version='2.47')
+                release.build_release(ROOT, CURRENT_VERSION, 'example/short-compass', Path(td), minimum_version='2.48')
 
 
 if __name__ == '__main__':

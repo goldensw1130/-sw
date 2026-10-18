@@ -137,6 +137,9 @@ def build_release(source_root, version, repository, output_dir, minimum_version=
                 if replace_count != 1:
                     raise ValueError('ShortCompassServer.py의 DEFAULT_UPDATE_MANIFEST_URL 자리표시자를 찾을 수 없습니다.')
                 payload = server_text.encode('utf-8')
+            # Windows CMD batch files need CRLF; normalize even when release is built on Linux.
+            if name.lower().endswith('.bat'):
+                payload = payload.replace(b'\r\n', b'\n').replace(b'\r', b'\n').replace(b'\n', b'\r\n')
             info = zipfile.ZipInfo(name, date_time=(2020, 1, 1, 0, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED
             info.create_system = 3

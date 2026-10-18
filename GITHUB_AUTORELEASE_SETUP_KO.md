@@ -93,6 +93,11 @@ v2.45의 `Setup_GitHub_AutoRelease.bat`은 동일 콘솔을 `cmd /k`로 유지�
 `%LOCALAPPDATA%\ShortCompass\logs\github-autorelease-setup.log`
 
 
-## v2.46 Windows 앱 실행 안정화
+## v2.47 Windows 앱 실행 안정화
 
-`Start_ShortCompass.bat`은 별도 `Start_ShortCompass_Server.bat` 서버 콘솔을 열고 `/health`가 v2.46 정상 응답을 반환한 다음 브라우저를 엽니다. 시작이 실패하면 창을 닫지 않고 로그 경로와 마지막 오류를 표시합니다. 실행 로그는 `%LOCALAPPDATA%\ShortCompass\logs\start-shortcompass.log`에 기록됩니다. 이미 이전 버전 서버가 8765 포트에서 실행 중이면 이전 서버 창에서 `Ctrl+C`로 종료하고 새 실행 파일을 다시 여세요.
+`Start_ShortCompass.bat`은 별도 `Start_ShortCompass_Server.bat` 서버 콘솔을 열고 `/health`가 v2.47 정상 응답을 반환한 다음 브라우저를 엽니다. 시작이 실패하면 창을 닫지 않고 로그 경로와 마지막 오류를 표시합니다. 실행 로그는 `%LOCALAPPDATA%\ShortCompass\logs\start-shortcompass.log`에 기록됩니다. 이미 이전 버전 서버가 8765 포트에서 실행 중이면 이전 서버 창에서 `Ctrl+C`로 종료하고 새 실행 파일을 다시 여세요.
+
+
+## v2.47 Windows BAT 실행 수정
+
+릴리스 ZIP 생성기는 모든 `.bat` 파일을 CRLF 줄바꿈으로 정규화하고 회귀 테스트로 검사합니다. `Start_ShortCompass.bat`은 복잡한 FOR /F 명령 치환을 제거하고 서버의 `/health` 정상 응답 후 브라우저를 엽니다. 시작 실패 로그는 `%LOCALAPPDATA%\ShortCompass\logs\start-shortcompass.log`입니다.

@@ -135,11 +135,11 @@ class VersionAndURLTests(unittest.TestCase):
             fetch.assert_not_called()
 
     def test_update_check_uses_manifest_and_numeric_version(self):
-        manifest={'schemaVersion':1,'version':'2.47','minimumVersion':'2.38','downloadUrl':'https://github.com/a/b/releases/download/v2.47/app.zip','sha256':'a'*64,'releaseNotes':'test'}
+        manifest={'schemaVersion':1,'version':'2.48','minimumVersion':'2.38','downloadUrl':'https://github.com/a/b/releases/download/v2.48/app.zip','sha256':'a'*64,'releaseNotes':'test'}
         with tempfile.TemporaryDirectory() as td, patch.object(app,'UPDATE_SETTINGS_PATH',Path(td)/'settings.json'), patch.object(app,'UPDATE_STATE_PATH',Path(td)/'state.json'), patch.object(app,'UPDATE_STAGE_PATH',Path(td)/'updates'/'stage.zip'), patch.object(app,'_fetch_https_json',return_value=manifest) as fetch:
             app._write_json_file(Path(td)/'settings.json',{'manifestUrl':'https://raw.githubusercontent.com/a/b/main/update_manifest.json','autoCheck':True,'intervalHours':24})
             result=app.check_for_update(force=True)
-            self.assertTrue(result['ok']); self.assertTrue(result['updateAvailable']); self.assertEqual(result['availableVersion'],'2.47')
+            self.assertTrue(result['ok']); self.assertTrue(result['updateAvailable']); self.assertEqual(result['availableVersion'],'2.48')
             fetch.assert_called_once()
 
 class AIWorkbenchTests(unittest.TestCase):
@@ -310,8 +310,8 @@ class FullDiagnosticsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             base=Path(td); root=base/'app'; data=base/'user-data'
             root.mkdir(); data.mkdir()
-            (root/'ShortCompassServer.py').write_text("APP_VERSION = '2.46'\n",encoding='utf-8')
-            (root/'ShortsCompass.html').write_text("<title>숏폼 나침반 v2.46 테스트</title><div class='footer'>숏폼 나침반 v2.46</div>backupMeta:{app:'ShortCompass',version:'2.46',exportedAt:new Date().toISOString()}",encoding='utf-8')
+            (root/'ShortCompassServer.py').write_text("APP_VERSION = '2.47'\n",encoding='utf-8')
+            (root/'ShortsCompass.html').write_text("<title>숏폼 나침반 v2.47 테스트</title><div class='footer'>숏폼 나침반 v2.47</div>backupMeta:{app:'ShortCompass',version:'2.47',exportedAt:new Date().toISOString()}",encoding='utf-8')
             (root/'Start_ShortCompass.bat').write_text('@echo off',encoding='utf-8')
             for name in ['Prepare_Release.py','release_workflow_template.yml','RELEASE_PUBLISHING_GUIDE_KO.md','Test_ReleaseTools.py']:
                 (root/name).write_text('test',encoding='utf-8')
