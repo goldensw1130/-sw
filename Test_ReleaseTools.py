@@ -92,7 +92,7 @@ class ReleaseToolValidationTests(unittest.TestCase):
     def test_manifest_minimum_version_cannot_exceed_release(self):
         with tempfile.TemporaryDirectory() as td:
             with self.assertRaisesRegex(ValueError, 'minimumVersion'):
-                release.build_release(ROOT, CURRENT_VERSION, 'example/short-compass', Path(td), minimum_version='2.49')
+                release.build_release(ROOT, CURRENT_VERSION, 'example/short-compass', Path(td), minimum_version='2.50')
 
 
 if __name__ == '__main__':

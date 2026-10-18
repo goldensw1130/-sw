@@ -43,7 +43,7 @@ class GitHubBootstrapSafetyTests(unittest.TestCase):
         raw = launcher_path.read_bytes()
         self.assertFalse(raw.startswith(b'\xef\xbb\xbf'), 'cmd.exe launcher must be BOM-free')
         self.assertIn('cmd.exe /k ""%~f0" %*"', self.launcher)
-        self.assertIn('SHORTCOMPASS_KEEP_OPEN_248', self.launcher)
+        self.assertIn('SHORTCOMPASS_KEEP_OPEN_249', self.launcher)
         self.assertIn('PowerShell exit code', self.launcher)
         self.assertIn('SETUP STOPPED. Exit code:', self.launcher)
         self.assertIn('type "%LOGFILE%"', self.launcher)
@@ -54,7 +54,7 @@ class GitHubBootstrapSafetyTests(unittest.TestCase):
         server_launcher = (ROOT / 'Start_ShortCompass_Server.bat').read_text(encoding='utf-8-sig')
         self.assertIn('Start_ShortCompass_Server.bat', app_launcher)
         self.assertIn('http://127.0.0.1:8765/health', app_launcher)
-        self.assertIn("'2.48'", app_launcher)
+        self.assertIn("'2.49'", app_launcher)
         self.assertIn('start-shortcompass.log', app_launcher)
         self.assertIn('pause', app_launcher.lower())
         self.assertNotIn('if errorlevel 1 goto :launch_error', app_launcher.lower())
@@ -64,6 +64,12 @@ class GitHubBootstrapSafetyTests(unittest.TestCase):
         self.assertIn('pause', server_launcher.lower())
         self.assertNotIn('for /f', app_launcher.lower())
         self.assertIn('HEALTH_CODE', app_launcher)
+        for name in ['Start_ShortCompass.bat', 'Start_ShortCompass_Server.bat', 'Setup_GitHub_AutoRelease.bat']:
+            raw=(ROOT / name).read_bytes()
+            self.assertFalse(raw.startswith(b'\\xef\\xbb\\xbf'), name + ' must not have UTF-8 BOM')
+            self.assertIn(b'\\r\\n', raw, name + ' must use CRLF')
+            self.assertNotIn(b'\\n', raw.replace(b'\\r\\n', b''), name + ' must not mix bare LF')
+
 
     def test_installer_offers_consented_winget_install_and_browser_login(self):
         self.assertIn('Windows 패키지 관리자 winget으로 위 도구를 설치할 수 있습니다', self.script)

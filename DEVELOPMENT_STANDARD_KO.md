@@ -180,3 +180,10 @@
 ## v2.45 Windows launcher failure handling
 
 The batch launcher has no UTF-8 BOM and re-enters itself through `cmd.exe /k` in the same console. The console remains available after the setup child exits, and errors are shown alongside the log path. This design is statically tested in CI; final validation still requires a real Windows desktop run.
+
+
+## v2.49 대시보드 UX 원칙
+- 작업 흐름은 소재 발굴 → 검토 → 대본 → 게시 성과 학습 순서로 안내하되, 기존 기능 탭과 상태 저장 구조를 유지한다.
+- 진행률과 수치는 저장된 실제 상태에서 파생한다. 비어 있거나 알 수 없는 데이터는 0이나 완료로 바꾸지 않는다.
+- 새 진행 카드에는 키보드 포커스, 반응형 배치, aria 상태 및 prefers-reduced-motion 대응을 적용한다.
+- Windows 배치 파일의 인코딩/BOM/CRLF는 배포 ZIP의 회귀 테스트로 확인한다.

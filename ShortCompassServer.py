@@ -19,7 +19,7 @@ SEARCH_CACHE_TTL = 180
 SEARCH_CACHE_MAX = 100
 MIN_INTERVAL = 2.5
 MAX_QUERY = 180
-APP_VERSION = '2.48'
+APP_VERSION = '2.49'
 # Replaced inside release ZIPs by Prepare_Release.py with the real public feed URL.
 DEFAULT_UPDATE_MANIFEST_URL = "https://github.com/goldensw1130/-sw/releases/latest/download/update_manifest.json"
 MAX_UPDATE_MANIFEST_BYTES = 262144

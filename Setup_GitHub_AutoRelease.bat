@@ -1,12 +1,12 @@
 @echo off
 setlocal EnableExtensions
 rem Keep the same console open even if PowerShell exits before displaying a prompt.
-if /i not "%SHORTCOMPASS_KEEP_OPEN_248%"=="1" (
-  set "SHORTCOMPASS_KEEP_OPEN_248=1"
+if /i not "%SHORTCOMPASS_KEEP_OPEN_249%"=="1" (
+  set "SHORTCOMPASS_KEEP_OPEN_249=1"
   cmd.exe /k ""%~f0" %*"
   exit /b
 )
-set "SHORTCOMPASS_KEEP_OPEN_248="
+set "SHORTCOMPASS_KEEP_OPEN_249="
 chcp 65001 >nul
 title ShortCompass GitHub Auto Release Setup
 if not defined LOCALAPPDATA set "LOCALAPPDATA=%USERPROFILE%\AppData\Local"
@@ -16,9 +16,9 @@ if not exist "%LOGDIR%" mkdir "%LOGDIR%" >nul 2>nul
 if not exist "%LOGDIR%" set "LOGFILE=%~dp0github-autorelease-setup.log"
 echo.>>"%LOGFILE%"
 echo ================================================================>>"%LOGFILE%"
-echo [%date% %time%] v2.48 launcher started>>"%LOGFILE%"
+echo [%date% %time%] v2.49 launcher started>>"%LOGFILE%"
 echo ================================================================
-echo ShortCompass GitHub Auto Release Setup - v2.48
+echo ShortCompass GitHub Auto Release Setup - v2.49
 echo Log file: "%LOGFILE%"
 echo Repository: https://github.com/goldensw1130/-sw
 echo 기존 저장소도 README/.gitignore와 .github/workflows/release.yml만 있으면 이어서 설정할 수 있습니다.
