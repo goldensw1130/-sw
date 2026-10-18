@@ -32,6 +32,7 @@ def update_zip(version='2.38', extra=None):
         'ShortsCompass.html': f'<title>숏폼 나침반 v{version} 업데이트</title>'.encode('utf-8'),
         'ShortCompassServer.py': f"APP_VERSION = '{version}'\n".encode('utf-8'),
         'Start_ShortCompass.bat': b'@echo off\r\n',
+        'Start_ShortCompass_Server.bat': b'@echo off\r\n',
     }
     if extra: items.update(extra)
     with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
@@ -135,11 +136,11 @@ class VersionAndURLTests(unittest.TestCase):
             fetch.assert_not_called()
 
     def test_update_check_uses_manifest_and_numeric_version(self):
-        manifest={'schemaVersion':1,'version':'2.48','minimumVersion':'2.38','downloadUrl':'https://github.com/a/b/releases/download/v2.48/app.zip','sha256':'a'*64,'releaseNotes':'test'}
+        manifest={'schemaVersion':1,'version':'2.49','minimumVersion':'2.38','downloadUrl':'https://github.com/a/b/releases/download/v2.49/app.zip','sha256':'a'*64,'releaseNotes':'test'}
         with tempfile.TemporaryDirectory() as td, patch.object(app,'UPDATE_SETTINGS_PATH',Path(td)/'settings.json'), patch.object(app,'UPDATE_STATE_PATH',Path(td)/'state.json'), patch.object(app,'UPDATE_STAGE_PATH',Path(td)/'updates'/'stage.zip'), patch.object(app,'_fetch_https_json',return_value=manifest) as fetch:
             app._write_json_file(Path(td)/'settings.json',{'manifestUrl':'https://raw.githubusercontent.com/a/b/main/update_manifest.json','autoCheck':True,'intervalHours':24})
             result=app.check_for_update(force=True)
-            self.assertTrue(result['ok']); self.assertTrue(result['updateAvailable']); self.assertEqual(result['availableVersion'],'2.48')
+            self.assertTrue(result['ok']); self.assertTrue(result['updateAvailable']); self.assertEqual(result['availableVersion'],'2.49')
             fetch.assert_called_once()
 
 class AIWorkbenchTests(unittest.TestCase):
@@ -310,9 +311,10 @@ class FullDiagnosticsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             base=Path(td); root=base/'app'; data=base/'user-data'
             root.mkdir(); data.mkdir()
-            (root/'ShortCompassServer.py').write_text("APP_VERSION = '2.47'\n",encoding='utf-8')
-            (root/'ShortsCompass.html').write_text("<title>숏폼 나침반 v2.47 테스트</title><div class='footer'>숏폼 나침반 v2.47</div>backupMeta:{app:'ShortCompass',version:'2.47',exportedAt:new Date().toISOString()}",encoding='utf-8')
+            (root/'ShortCompassServer.py').write_text("APP_VERSION = '2.48'\n",encoding='utf-8')
+            (root/'ShortsCompass.html').write_text("<title>숏폼 나침반 v2.48 테스트</title><div class='footer'>숏폼 나침반 v2.48</div>backupMeta:{app:'ShortCompass',version:'2.48',exportedAt:new Date().toISOString()}",encoding='utf-8')
             (root/'Start_ShortCompass.bat').write_text('@echo off',encoding='utf-8')
+            (root/'Start_ShortCompass_Server.bat').write_text('@echo off',encoding='utf-8')
             for name in ['Prepare_Release.py','release_workflow_template.yml','RELEASE_PUBLISHING_GUIDE_KO.md','Test_ReleaseTools.py']:
                 (root/name).write_text('test',encoding='utf-8')
             settings=data/'update_settings.json'
@@ -351,6 +353,7 @@ class FullDiagnosticsTests(unittest.TestCase):
             (root/'ShortCompassServer.py').write_text("APP_VERSION = '2.39'\n",encoding='utf-8')
             (root/'ShortsCompass.html').write_text("<title>숏폼 나침반 v2.38 테스트</title><div class='footer'>숏폼 나침반 v2.38</div>backupMeta:{app:'ShortCompass',version:'2.38',exportedAt:new Date().toISOString()}",encoding='utf-8')
             (root/'Start_ShortCompass.bat').write_text('@echo off',encoding='utf-8')
+            (root/'Start_ShortCompass_Server.bat').write_text('@echo off',encoding='utf-8')
             paths={'ROOT':root,'USER_DATA_ROOT':data,'UPDATE_SETTINGS_PATH':data/'u.json','UPDATE_STATE_PATH':data/'s.json','UPDATE_STAGE_PATH':data/'updates'/'stage.zip','AI_MODELS_PATH':data/'models.json'}
             old={k:getattr(app,k) for k in paths}; old_keys=dict(app.SESSION_AI_KEYS)
             try:

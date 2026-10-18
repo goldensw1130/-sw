@@ -1,12 +1,16 @@
-숏폼 나침반 v2.47 시작하기
+숏폼 나침반 v2.48 시작하기
 
-1. 공식 GitHub Release의 ShortCompass-v2.47.zip을 다운로드해 새 폴더에 압축 해제합니다.
+1. 공식 GitHub Release의 ShortCompass-v2.48.zip을 다운로드해 새 폴더에 압축 해제합니다.
 2. Start_ShortCompass.bat을 실행합니다. 서버의 /health 정상 응답을 확인한 후 브라우저를 엽니다.
 3. 별도 서버 창은 검색, AI 프록시, 자동 업데이트 기능을 사용하는 동안 닫지 마세요.
 4. 시작 오류 로그는 %LOCALAPPDATA%\ShortCompass\logs\start-shortcompass.log에 저장됩니다.
 5. 브라우저가 열리지 않으면 서버 창이 자동으로 닫히지 않도록 유지해 오류를 확인할 수 있습니다.
 
-[v2.47 Windows 배치 실행 수정]
+[v2.48 Windows 배치 실행 수정]
 - Windows CMD에서 배치 명령과 라벨이 잘못 분리되는 문제를 줄이기 위해 .bat 파일을 CRLF 줄바꿈으로 배포합니다.
 - 시작 스크립트는 복잡한 FOR /F 명령 치환을 제거하고 단순한 상태 코드 방식으로 서버를 확인합니다.
 - 서버가 시작되지 못하면 별도 서버 콘솔이 유지되고 로그 파일을 확인할 수 있습니다.
+
+
+[v2.48 실행 수정]
+정상 실행되면 브라우저가 열리고 시작 안내 창은 자동 종료됩니다. 서버 콘솔은 로컬 검색, AI 프록시, 업데이트 기능을 사용하는 동안 유지하세요. 실패 로그: %LOCALAPPDATA%\ShortCompass\logs\start-shortcompass.log

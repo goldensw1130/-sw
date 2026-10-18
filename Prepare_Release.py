@@ -11,7 +11,7 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-CORE_FILES = ('ShortCompass.html', 'ShortCompassServer.py', 'Start_ShortCompass.bat')
+CORE_FILES = ('ShortCompass.html', 'ShortCompassServer.py', 'Start_ShortCompass.bat', 'Start_ShortCompass_Server.bat')
 VERSION_RE = re.compile(r'^\d+(?:\.\d+){1,3}$')
 REPOSITORY_RE = re.compile(r'^[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_.-]{1,100}$')
 SECRET_PATTERNS = (

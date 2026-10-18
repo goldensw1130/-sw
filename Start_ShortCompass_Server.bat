@@ -2,7 +2,7 @@
 setlocal EnableExtensions
 chcp 65001 >nul 2>&1
 cd /d "%~dp0" || goto :folder_error
-title ShortCompass Local Server v2.47
+title ShortCompass Local Server v2.48
 
 if defined LOCALAPPDATA (
   set "LOG_DIR=%LOCALAPPDATA%\ShortCompass\logs"
@@ -12,7 +12,7 @@ if defined LOCALAPPDATA (
 if not exist "%LOG_DIR%" mkdir "%LOG_DIR%" >nul 2>&1
 set "LOG_FILE=%LOG_DIR%\start-shortcompass.log"
 echo.>>"%LOG_FILE%"
-echo [%date% %time%] Server launcher v2.47 started>>"%LOG_FILE%"
+echo [%date% %time%] Server launcher v2.48 started>>"%LOG_FILE%"
 
 if not exist "%~dp0ShortCompassServer.py" goto :missing_server
 

@@ -1,14 +1,13 @@
-# 숏폼 나침반 v2.47
+# 숏폼 나침반 v2.48
 
-Windows용 숏폼 콘텐츠 조사·제작·성과분석 도구입니다.
+Windows CMD 실행 수정 릴리스입니다.
 
-## Windows에서 실행
+## 실행
+1. 공식 릴리스의 `ShortCompass-v2.48.zip`을 새 폴더에 전체 압축 해제합니다.
+2. `Start_ShortCompass.bat`을 실행합니다.
+3. 로컬 서버의 `/health`가 정상 응답을 반환하면 브라우저가 열립니다.
+4. 정상 실행 후에는 서버 콘솔을 열어 둡니다. 임시 시작 창은 자동으로 닫힙니다.
 
-1. 공식 Release ZIP 전체를 새 폴더에 압축 해제합니다.
-2. `Start_ShortCompass.bat`을 실행합니다. 앱은 로컬 `/health` 정상 응답을 확인한 뒤 브라우저를 엽니다.
-3. `Start_ShortCompass_Server.bat` 서버 창은 프로그램 사용 중 열어 둡니다.
-4. 시작 오류 로그: `%LOCALAPPDATA%\ShortCompass\logs\start-shortcompass.log`
+오류 로그: `%LOCALAPPDATA%\ShortCompass\logs\start-shortcompass.log`
 
-## 배포 확인
-
-릴리스 ZIP 빌더가 모든 Windows `.bat` 파일의 줄 끝을 CRLF로 고정하고, 회귀 테스트가 이를 검증합니다. Windows 배치 파일은 BOM 없이 배포합니다.
+릴리스 ZIP 작성기는 Windows 배치 파일을 CRLF 줄바꿈으로 저장합니다. 앱 버전, HTML 버전 메타데이터, 테스트와 업데이트 허용 목록을 함께 검증합니다.

@@ -19,7 +19,7 @@ SEARCH_CACHE_TTL = 180
 SEARCH_CACHE_MAX = 100
 MIN_INTERVAL = 2.5
 MAX_QUERY = 180
-APP_VERSION = '2.47'
+APP_VERSION = '2.48'
 # Replaced inside release ZIPs by Prepare_Release.py with the real public feed URL.
 DEFAULT_UPDATE_MANIFEST_URL = "https://github.com/goldensw1130/-sw/releases/latest/download/update_manifest.json"
 MAX_UPDATE_MANIFEST_BYTES = 262144
@@ -508,7 +508,7 @@ def run_full_diagnostics():
     py_ok = tuple(__import__('sys').version_info[:2]) >= (3,8)
     add('python-version','Python 버전','PASS' if py_ok else 'WARN',
         'Python '+__import__('platform').python_version() + (' 사용 가능' if py_ok else '은 지원 최소 버전(3.8)보다 낮습니다.'))
-    required={'ShortCompassServer.py','ShortsCompass.html','Start_ShortCompass.bat'}
+    required={'ShortCompassServer.py','ShortsCompass.html','Start_ShortCompass.bat','Start_ShortCompass_Server.bat'}
     missing=sorted(n for n in required if not (ROOT/n).is_file())
     add('core-files','핵심 파일','PASS' if not missing else 'FAIL',
         '필수 파일을 확인했습니다.' if not missing else '필수 파일이 없습니다: '+', '.join(missing))
@@ -701,7 +701,7 @@ def _validate_update_zip_bytes(blob, expected_sha256, expected_version=None):
             names.append(name); unpacked+=info.file_size
             if info.file_size>MAX_UPDATE_UNPACKED_BYTES or unpacked>MAX_UPDATE_UNPACKED_BYTES: raise ValueError('압축 해제 크기가 제한을 초과합니다.')
             if info.file_size and info.compress_size and info.file_size/info.compress_size>250: raise ValueError('비정상적인 압축 비율로 중단했습니다.')
-        if not {'ShortsCompass.html','ShortCompassServer.py','Start_ShortCompass.bat'}.issubset(set(names)): raise ValueError('필수 프로그램 파일이 없습니다.')
+        if not {'ShortsCompass.html','ShortCompassServer.py','Start_ShortCompass.bat','Start_ShortCompass_Server.bat'}.issubset(set(names)): raise ValueError('필수 프로그램 파일이 없습니다.')
         server_source=zf.read('ShortCompassServer.py').decode('utf-8')
         match=re.search(r"APP_VERSION\s*=\s*['\"]([^'\"]+)['\"]",server_source)
         if not match: raise ValueError('업데이트 안에서 프로그램 버전을 확인할 수 없습니다.')
