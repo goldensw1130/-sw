@@ -4,7 +4,7 @@ services:
     repo: https://github.com/goldensw1130/-sw
     branch: oreummok-cloud-server
     runtime: node
-    plan: starter
+    plan: free
     numInstances: 1
     region: singapore
     rootDir: oreummok-cloud
@@ -12,15 +12,15 @@ services:
     startCommand: node service/cloud-server.mjs
     healthCheckPath: /healthz
     autoDeployTrigger: checksPass
-    disk:
-      name: oreummok-business-data
-      mountPath: /var/data/oreummok
-      sizeGB: 1
     envVars:
       - key: NODE_VERSION
         value: 24.11.1
       - key: OREUMMOK_DATA_DIR
-        value: /var/data/oreummok
+        value: /tmp/oreummok-cache
+      - key: SUPABASE_URL
+        value: https://tccaipjgaijnnrwxuout.supabase.co
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
       - key: OREUMMOK_ADMIN_USERNAME
         sync: false
       - key: OREUMMOK_ADMIN_PASSWORD
