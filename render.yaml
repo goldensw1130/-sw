@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: oreummok-cloud
+    runtime: node
+    plan: starter
+    numInstances: 1
+    region: singapore
+    rootDir: oreummok-cloud
+    buildCommand: node --version
+    startCommand: node service/cloud-server.mjs
+    healthCheckPath: /healthz
+    autoDeployTrigger: checksPass
+    disk:
+      name: oreummok-business-data
+      mountPath: /var/data/oreummok
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: 24.11.1
+      - key: OREUMMOK_DATA_DIR
+        value: /var/data/oreummok
+      - key: OREUMMOK_ADMIN_USERNAME
+        sync: false
+      - key: OREUMMOK_ADMIN_PASSWORD
+        sync: false
