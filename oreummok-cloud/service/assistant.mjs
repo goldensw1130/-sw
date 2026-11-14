@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import {stairGeometry} from './stairs.mjs';
 const numeric=['quantity','watts','length','wattsPerM','voltage','supply','tax','materialCost','laborCost','otherCost'];
 export function reviewContext(state,user,args={}){
-  const kind=args.kind||'general';let context={},notes=[];
+  const kind=args.kind||'general';let context={},notes=[];if(kind==='general'){const topic=['stairs','quote','lighting'].includes(args.topic)?args.topic:'stairs';context={kind:'general',topic};notes.push(topic==='quote'?'견적 준비: 수량·단가·자재 손실률·인건비·철거·운반·폐기·출장비·세금·하자 비용과 지급 조건을 정리하세요.':topic==='lighting'?'조명 준비: 등기구 수량·소비전력·LED 길이·전원장치·배선 경로·제어 방식·습기 노출 조건을 확인하세요.':'계단 준비: 바닥 마감 두께·골조 상태·철거 범위·난간·벽체 고정·운반 동선·전기 우회 배선을 실측하세요.');}
   if(kind==='quotes'){
     requirePermission(user,'quotes.read');const q=(state.quotes||[]).find(x=>x.id===args.id);if(!q)throw Error('검토할 견적을 다시 선택하세요.');
     context={kind,items:q.items.map(i=>({qty:+i.qty,cost:+i.cost,...(i.sale===undefined?{}:{sale:+i.sale})})),margin:+q.margin,taxMode:q.taxMode,vat:q.vat,vatRate:q.vatRate,discount:q.discount};
@@ -30,7 +30,7 @@ export function reviewContext(state,user,args={}){
   notes.push('계단 실측: 마감 층고·단높이·디딤판·유효 폭·머리 공간·개구부를 확인하세요.','3D 치수 검사는 구조 안전 승인이나 법규 적합 판정을 대신하지 않습니다.');
   return {context,notes,previewToken:createHash('sha256').update(JSON.stringify(context)).digest('hex'),notice:'무료 규칙 기반 자동검토입니다. AI 답변과 구분됩니다. 원가·치수는 등록 자료 기준이며 현장 확인이 필요합니다.'};
 }
-export function aiStatus(env=process.env){return {configured:!!env.OREUMMOK_GEMINI_API_KEY&&env.OREUMMOK_AI_FREE_PROJECT==='true',provider:'Gemini',model:env.OREUMMOK_AI_MODEL||'gemini-2.5-flash-lite',notice:'결제 연결이 없는 무료 프로젝트의 API 키를 서버에 설정해야 합니다. 무료 한도 초과 시 자동 유료 전환하지 않습니다. 무료 API 입력은 제공업체의 서비스 개선에 사용될 수 있습니다.'};}
+export function aiStatus(env=process.env){return {configured:!!env.OREUMMOK_GEMINI_API_KEY&&env.OREUMMOK_AI_FREE_PROJECT==='true',provider:'Gemini',model:env.OREUMMOK_AI_MODEL||'gemini-2.5-flash-lite',notice:'관리자 API 키 설정에서 결제 연결이 없는 무료 프로젝트 키를 입력하세요. 무료 한도 초과 시 자동 유료 전환하지 않습니다. 무료 API 입력은 제공업체의 서비스 개선에 사용될 수 있습니다.'};}
 export function createAssistant({env=process.env,fetcher=fetch,now=Date.now}={}){
  const limits=new Map();
  return async function ask(user,args,review){

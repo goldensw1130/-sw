@@ -1,7 +1,7 @@
 import {readFileSync,writeFileSync,existsSync,mkdirSync,unlinkSync} from 'node:fs';
 import path from 'node:path';
 
-const names=['accounts.json','state.json','state.json.previous','remembered-devices.json','auth-events.log'];
+const names=['assistant-private.json','accounts.json','state.json','state.json.previous','remembered-devices.json','auth-events.log'];
 export function supabaseStore({url,key,dir,fetcher=fetch}){
  const origin=new URL(url);
  if(origin.protocol!=='https:'||origin.pathname!=='/'||origin.search||origin.hash||origin.username||origin.password)throw Error('Invalid Supabase project URL');

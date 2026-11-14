@@ -12,9 +12,9 @@ test('Supabase persists across empty cache restart and restores account, busines
  const dir=mkdtempSync(path.join(process.cwd(),'.qa-supabase-'));const db=fake();const config={url:'https://example.supabase.co',key:'qa-only-not-real',fetcher:db.fetcher};
  try{
   const a=supabaseStore({...config,dir:path.join(dir,'a')});
-  await a.run(()=>{for(const name of ['accounts.json','state.json','remembered-devices.json'])writeFileSync(path.join(dir,'a',name),JSON.stringify({sample:name}));});
+  await a.run(()=>{for(const name of ['accounts.json','state.json','remembered-devices.json','assistant-private.json'])writeFileSync(path.join(dir,'a',name),JSON.stringify({sample:name}));});
   const b=supabaseStore({...config,dir:path.join(dir,'b')});
-  await b.run(()=>assert.equal(JSON.parse(readFileSync(path.join(dir,'b','state.json'))).sample,'state.json'));
+  await b.run(()=>{assert.equal(JSON.parse(readFileSync(path.join(dir,'b','state.json'))).sample,'state.json');assert.equal(JSON.parse(readFileSync(path.join(dir,'b','assistant-private.json'))).sample,'assistant-private.json');});
   db.setOffline(true);let called=false;await assert.rejects(b.run(()=>{called=true;}),/storage unavailable/);assert.equal(called,false);db.setOffline(false);
   db.setConflict(true);await assert.rejects(b.run(()=>writeFileSync(path.join(dir,'b','state.json'),'changed')),/changed/);
   assert.notEqual(readFileSync(path.join(dir,'b','state.json'),'utf8'),'changed');
