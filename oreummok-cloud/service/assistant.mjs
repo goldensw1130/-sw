@@ -1,3 +1,4 @@
+import {createGeminiClient,sharedGeminiClient} from './gemini-client.mjs';
 import {answerRequest} from './assistant-prompt.mjs';
 import {requirePermission} from './permissions.mjs';
 import {totals} from './core.mjs';
@@ -33,7 +34,7 @@ export function reviewContext(state,user,args={}){
 }
 export function aiStatus(env=process.env){return {configured:!!env.OREUMMOK_GEMINI_API_KEY&&env.OREUMMOK_AI_FREE_PROJECT==='true',provider:'Gemini',model:env.OREUMMOK_AI_MODEL||'gemini-2.5-flash-lite',notice:'관리자 API 키 설정에서 결제 연결이 없는 무료 프로젝트 키를 입력하세요. 무료 한도 초과 시 자동 유료 전환하지 않습니다. 무료 API 입력은 제공업체의 서비스 개선에 사용될 수 있습니다.'};}
 export function createAssistant({env=process.env,fetcher=fetch,now=Date.now}={}){
- const limits=new Map();
+ const limits=new Map(),gemini=fetcher===fetch?sharedGeminiClient:createGeminiClient({fetcher});
  return async function ask(user,args,review){
   if(!aiStatus(env).configured)throw Error('생성형 AI가 아직 연결되지 않았습니다. 무료 자동검토를 먼저 이용하세요.');
   if(args.consent!==true)throw Error('외부 AI 전송 내용을 확인하고 동의하세요.');
@@ -45,10 +46,8 @@ export function createAssistant({env=process.env,fetcher=fetch,now=Date.now}={})
   if(old.at&&t-old.at<15000)throw Error('AI 요청은 15초 간격으로 이용하세요.');
   const count=old.day===day?old.count:0;if(count>=30)throw Error('오름목의 계정별 일일 AI 요청 한도 30회에 도달했습니다.');
   limits.set(key,{at:t,count:count+1,day});if(limits.size>1000)for(const[k,v]of limits)if(v.day!==day)limits.delete(k);
-  const model=env.OREUMMOK_AI_MODEL||'gemini-2.5-flash-lite';if(!/^gemini-[a-z0-9.-]+$/.test(model))throw Error('AI 모델 설정 오류입니다.');
-  let response;try{response=await fetcher('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':env.OREUMMOK_GEMINI_API_KEY},signal:AbortSignal.timeout(45000),body:JSON.stringify(payload)});}catch{throw Error('AI 연결 시간이 초과되었거나 연결에 실패했습니다. 자동검토 결과는 계속 이용할 수 있습니다.');}
-  if(!response.ok)throw Error(response.status===429?'무료 AI 요청 한도에 도달했습니다. 잠시 후 다시 이용하세요. 유료 모델로 전환하지 않았습니다.':'AI 제공업체 연결 오류입니다. 서버의 키·모델 설정을 확인하세요.');
-  const data=await response.json(),candidate=data.candidates?.[0],answer=(candidate?.content?.parts||[]).filter(p=>!p.thought).map(p=>p.text||'').join('\n').trim();
+  const generated=await gemini.generate(env,payload),model=generated.model;
+  const data=generated.data,candidate=data.candidates?.[0],answer=(candidate?.content?.parts||[]).filter(p=>!p.thought).map(p=>p.text||'').join('\n').trim();
   if(!answer)throw Error('AI 답변이 비어 있거나 제공업체에서 제한했습니다. 질문을 바꿔 다시 시도하세요.');
   return {answer:answer.slice(0,28000),truncated:candidate?.finishReason==='MAX_TOKENS'||answer.length>28000,provider:'Gemini',model,notice:'AI 제안이며 오류가 있을 수 있습니다. 현장 실측·공사비·구조·전기 검토는 담당자가 확인하세요.'};
  };

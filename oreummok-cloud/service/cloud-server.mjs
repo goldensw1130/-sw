@@ -1,3 +1,4 @@
+import {probeAssistant} from './assistant-probe.mjs';
 import http from 'node:http';
 import {supabaseStore} from './supabase-store.mjs';
 import path from 'node:path';
@@ -14,6 +15,7 @@ export async function cloudServer({dir,username,password,host='0.0.0.0',port=100
   if(!username||typeof password!=='string'||password.length<16)throw Error('Initial administrator credentials (password >=16 characters) are required');
   await engine.call('setup',{username,password,name:'오름목 관리자'});
  }});
+ const aiHealth=await run(()=>probeAssistant(dir));
  let queue=Promise.resolve(),pending=0;
  const rates=new Map();
  const server=http.createServer(async(req,res)=>{
@@ -21,7 +23,7 @@ export async function cloudServer({dir,username,password,host='0.0.0.0',port=100
   res.setHeader('Cache-Control','no-store');
   res.setHeader('X-Content-Type-Options','nosniff');
   const send=(status,body)=>{res.writeHead(status);res.end(JSON.stringify(body));};
-  if(req.method==='GET'&&req.url==='/healthz')return send(200,{ok:true,service:'oreummok-cloud'});
+  if(req.method==='GET'&&req.url==='/healthz')return send(200,{ok:true,service:'oreummok-cloud',ai:aiHealth});
   // Enable only behind the hosting provider's trusted HTTPS proxy. Never expose this port directly.
   if(requireHttps&&req.headers['x-forwarded-proto']!=='https')return send(426,{ok:false,error:'HTTPS 연결이 필요합니다.'});
   if(req.method!=='POST'||req.url!=='/rpc')return send(404,{ok:false,error:'Not found'});
