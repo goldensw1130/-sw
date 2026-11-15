@@ -33,7 +33,7 @@ export function validateStairWork(key,r){
  if(!stages.includes(r.status))throw Error('공정 기록 상태를 확인하세요.');
  const needs=key==='stairFiles'&&r.status!=='실측중'?['use','ruleReview','measurement','opening','structureReview','utilityReview','woodBatch','moisture','cutList','fixing','reviewer','reviewDate']:key==='changeOrders'&&['고객확인','시공완료'].includes(r.status)?['before','after','confirmation']:[];
  if(key==='stairFiles'&&r.status==='준공인계')needs.push('testRecord','handover','evidence');
- for(const field of needs)if(typeof r[field]!=='string'||!r[field].trim())throw Error('단계 변경 전에 필수 근거를 입력하세요: '+field);
+ const missing=needs.filter(field=>typeof r[field]!=='string'||!r[field].trim());if(missing.length){const module=stairWorkModules.find(m=>m.key===key);throw Error('현재 입력은 유지됩니다. 단계 변경 전에 다음 근거를 입력하세요: '+missing.map(k=>module.fields.find(f=>f.key===k)?.label||k).join(' / '));}
  for(const field of ['amount','tax','cost'])if(r[field]!==undefined&&(!Number.isFinite(+r[field])||+r[field]<0||+r[field]>1e12))throw Error('금액을 확인하세요.');
  if(r.ledPlan?.trim()&&['제작준비','준공인계'].includes(r.status)&&!r.serviceAccess?.trim())throw Error('LED 적용 시 전원장치 점검·교체 접근 계획을 기록하세요.');
 }
