@@ -1,0 +1,51 @@
+name: OreumMok Windows PC package
+on:
+  push:
+    branches: [oreummok-cloud-server]
+    paths:
+      - 'native-client-source/**'
+      - 'oreummok-cloud/service/**'
+      - '.github/workflows/oreummok-pc-build.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: oreummok-windows-package
+  cancel-in-progress: true
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.11.1
+      - name: Service regression on Windows
+        run: node --test tests/*-test.mjs
+        working-directory: oreummok-cloud
+      - name: Build, install and validate native PC
+        shell: pwsh
+        run: ./native-client-source/build-pc21.ps1
+      - name: Verified installation files
+        uses: actions/upload-artifact@v4
+        with:
+          name: OreumMok-PC-v0.21
+          path: |
+            ci-output/OreumMokSetup-v0.21.exe
+            ci-output/OreumMok-User-PC-v0.21.zip
+            ci-output/UPGRADE_0.21_ko.md
+            ci-output/SHA256SUMS.json
+          if-no-files-found: error
+      - name: Isolated validation diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: OreumMok-PC-QA-v0.21
+          path: |
+            ci-output/native-cloud-check.json
+            ci-output/install-log.txt
+            qa-native-ci-installed21/*.png
+            qa-native-ci-installed21/*-test.json
+            qa-native-ci-installed21/self-test-error.txt
+          if-no-files-found: warn
