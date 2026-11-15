@@ -1,1 +1,1 @@
-using System.Reflection;[assembly:AssemblyVersion("0.25.0.0")][assembly:AssemblyFileVersion("0.25.0.0")]
+using System.Reflection;[assembly:AssemblyVersion("0.26.0.0")][assembly:AssemblyFileVersion("0.26.0.0")]
