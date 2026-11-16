@@ -16,10 +16,11 @@ Copy-Item assets\fonts\SOURCE.json "$app\assets\fonts\SOURCE.json"
 Copy-Item assets\brand\app-icon.png "$app\app-icon.png"
 if((Get-FileHash "$app\app-icon.png" -Algorithm SHA256).Hash.ToLowerInvariant() -ne "5340e9ab55fb707dfa652cd79d6587c2333fad024b0633a306430c29b61f56e2"){throw "Brand icon checksum mismatch"}
 Add-Type -AssemblyName System.Drawing
-$bitmap=[Drawing.Bitmap]::FromFile("$app\app-icon.png")
+$source=[Drawing.Bitmap]::FromFile("$app\app-icon.png")
+$bitmap=[Drawing.Bitmap]::new($source,128,128)
 $icon=[Drawing.Icon]::FromHandle($bitmap.GetHicon())
 $stream=[IO.File]::Create("$app\oreummok.ico")
-$icon.Save($stream);$stream.Dispose();$bitmap.Dispose()
+$icon.Save($stream);$stream.Dispose();$bitmap.Dispose();$source.Dispose()
 Copy-Item RELEASE_1.0_ko.md "$app\RELEASE_1.0_ko.md"
 Copy-Item release.json "$app\release.json"
 $csc='C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
