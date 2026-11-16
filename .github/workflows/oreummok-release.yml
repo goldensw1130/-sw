@@ -1,0 +1,99 @@
+name: OreumMok formal release validation
+on:
+  push:
+    branches: [oreummok-cloud-server, oreummok-release-1.0.0]
+    paths:
+      - 'release.json'
+      - 'native-client-source/**'
+      - 'oreummok-cloud/**'
+      - 'assets/**'
+      - 'RELEASE_1.0_ko.md'
+      - '.github/workflows/oreummok-release.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: oreummok-formal-release
+  cancel-in-progress: true
+jobs:
+  service:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.11.1
+      - run: node --test oreummok-cloud/tests/*-test.mjs
+  windows:
+    needs: service
+    runs-on: windows-2022
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.11.1
+      - run: node --test oreummok-cloud/tests/*-test.mjs
+      - shell: pwsh
+        run: ./native-client-source/build-release.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OreumMok-PC-Release
+          path: |
+            ci-output/OreumMokSetup-v*.exe
+            ci-output/OreumMok-User-PC-v*.zip
+            ci-output/RELEASE_1.0_ko.md
+            ci-output/SHA256SUMS.json
+            ci-output/installer-validation.json
+            ci-output/native-cloud-check.json
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: OreumMok-PC-Release-QA
+          path: |
+            ci-output/install-log.txt
+            qa-native-release/*-test.json
+            qa-native-release/self-test-error.txt
+          if-no-files-found: warn
+  android:
+    needs: service
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.11.1
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Install pinned Android tools
+        run: sdkmanager 'platforms;android-35' 'build-tools;34.0.0'
+      - run: python native-client-source/build-android-release.py
+      - name: Enable emulator KVM
+        run: sudo chmod 666 /dev/kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect -memory 2048
+          script: python native-client-source/check-android-ui.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OreumMok-Android-Validated-Unsigned
+          path: |
+            android-output/OreumMok-Android-v*-unsigned.apk
+            android-output/apksigner.jar
+            android-output/code-checksums.json
+            android-output/android-validation.json
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: OreumMok-Android-Release-QA
+          path: android-output/ui-test.log
+          if-no-files-found: warn

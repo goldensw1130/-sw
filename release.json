@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "androidVersionCode": 100,
+  "channel": "stable",
+  "schema": 1,
+  "releaseDate": "2026-11-16",
+  "pcRuntime": "24.11.1",
+  "androidMinSdk": 26,
+  "androidTargetSdk": 35
+}
