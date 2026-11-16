@@ -70,7 +70,10 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Install pinned Android tools
-        run: sdkmanager 'platforms;android-35' 'build-tools;34.0.0'
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f | head -1); fi
+          "$SDKMANAGER" 'platforms;android-35' 'build-tools;34.0.0' 
       - run: python native-client-source/build-android-release.py
       - name: Enable emulator KVM
         run: sudo chmod 666 /dev/kvm

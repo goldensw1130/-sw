@@ -14,6 +14,7 @@ $fontSpec=Get-Content assets\fonts\SOURCE.json -Raw | ConvertFrom-Json
 foreach($entry in $fontSpec.files.PSObject.Properties){$file=Join-Path "$app\assets\fonts" $entry.Name;Invoke-WebRequest ("https://raw.githubusercontent.com/google/fonts/main/ofl/gothica1/"+$entry.Name) -OutFile $file;if((Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value){throw 'Font checksum mismatch'}}
 Copy-Item assets\fonts\SOURCE.json "$app\assets\fonts\SOURCE.json"
 Copy-Item assets\brand\app-icon.png "$app\app-icon.png"
+if((Get-FileHash "$app\app-icon.png" -Algorithm SHA256).Hash.ToLowerInvariant() -ne "5340e9ab55fb707dfa652cd79d6587c2333fad024b0633a306430c29b61f56e2"){throw "Brand icon checksum mismatch"}
 Add-Type -AssemblyName System.Drawing
 $bitmap=[Drawing.Bitmap]::FromFile("$app\app-icon.png")
 $icon=[Drawing.Icon]::FromHandle($bitmap.GetHicon())

@@ -14,6 +14,7 @@ def run(*args): subprocess.run([str(x) for x in args],check=True,cwd=ROOT)
 def digest(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 for p in [BUILD/'res'/'drawable',BUILD/'assets'/'fonts',BUILD/'classes',BUILD/'dex',OUT]: p.mkdir(parents=True,exist_ok=True)
 shutil.copy2(ROOT/'assets'/'brand'/'app-icon.png',BUILD/'res'/'drawable'/'icon.png')
+if digest(BUILD/'res'/'drawable'/'icon.png')!='5340e9ab55fb707dfa652cd79d6587c2333fad024b0633a306430c29b61f56e2':raise RuntimeError('Brand icon checksum mismatch')
 spec=json.loads((ROOT/'assets'/'fonts'/'SOURCE.json').read_text())
 for name,sha in spec['files'].items():
     p=BUILD/'assets'/'fonts'/name
